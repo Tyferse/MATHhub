@@ -1,0 +1,64 @@
+{% load static %}
+<script>
+    // alert('Вау, ты нашёл этот сайт! Поздравляю, у тебя нет личной жизни.');
+    console.log('Вау, ты нашёл этот сайт! Поздравляю, у тебя нет личной жизни.');
+    let wat = 'Цу сфт кузуфе ше!';
+    console.log(wat);
+</script>
+<header>
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg navbar navbar-expand-md navbar navbar-expand-sm navbar navbar-expand-xs sticky-top" data-bs-theme="dark">
+        <div class="container-fluid justify-content-between">
+            <a class="navbar-brand" href="{% url 'main' %}"><img src="{% static 'bsimg/mathhub.jpg' %}"></a>
+            <div class="navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mb-2 mb-lg-0 me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'main' %}">Главная</a>
+                    </li>
+                    <!-- Выпадающий список -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
+                            Разделы
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Математический анализ</a></li>
+                            <li><a class="dropdown-item" href="#">Линейная алгебра</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Поверхностные интегралы</a></li>
+                            <li><a class="dropdown-item" href="#">Линейные пространства</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Другое</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/Tyferse/websheet/tree/dz7btstrp">GitHub</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#form-li" id="sub-link">Оформить подписку</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'survey:survey_page' %}">Пройти опрос</a>
+                    </li>
+                </ul>
+                <form class="d-flex justify-content-start" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">
+                    <button class="btn btn-outline-primary" type="submit" aria-expanded="true">Поиск</button>
+                </form>
+
+                <!-- Модальное окно для входа или регистрации -->
+                {% if not user.is_authenticated %}
+                    <button class="btn btn-warning me-3" data-bs-toggle="modal" data-bs-target="#modal-sign-in" aria-expanded="true" id="loginbtn" style="margin-left: auto;">
+                        Войти
+                    </button>
+                {% else %}
+                    <a href="{% url 'register:acc' %}" type="button" class="btn btn-secondary" aria-expanded="true" style="margin: 0.4em 0.8em 0 auto;">
+                        Профиль
+                    </a>
+                    <a href="{% url 'logout' %}?next={% url 'main' %}" type="button" class="btn btn-danger" aria-expanded="true" id="loginbtn">
+                        Выйти
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+</header>

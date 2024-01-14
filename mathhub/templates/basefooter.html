@@ -1,0 +1,20 @@
+{% load static %}
+<hr>
+<div>
+    <footer>
+        <div class="container-fluid row">
+            <ul class="nav justify-content-center">
+                <li style="margin-bottom: 1em;;"><a href="#" class="nav-link text-info">О нас</a></li>
+                <li id="form-li">
+                    <form class="d-flex justify-content-start" id="subscriptionForm" method="post">
+                        {% csrf_token %}
+                        <input type="email" id="emailInput" class="form-control me-2" name="email" placeholder="Введите ваш email" aria-label="Введите ваш email" required style="display: inherit;">
+                        <button class="btn btn-outline-danger" type="submit" aria-expanded="true" style="display: inherit;">Оформить подписку</button>
+                    </form>
+<!--                    <div id="subscriptionMessage" style="display: none;"></div>-->
+                </li>
+            </ul>
+        </div>
+    </footer>
+    <script src="{% static 'js/subscription.js' %}"></script>
+</div>

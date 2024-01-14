@@ -1,0 +1,143 @@
+body {
+    background-color: #202727;
+    color: white;
+}
+nav[aria-label="breadcrumb"] {
+    --bs-breadcrumb-divider: '>';
+}
+.navbar {
+    font-size: 80%;
+    background-color: #010201;
+}
+nav.navbar > div > a.navbar-brand > img {
+    height: 40px;
+    width: 120px;
+}
+#loginbtn {
+   margin: 0.4em 0 0 0;
+}
+#passwordHelpBlock {
+    font-size: 0.75em;
+}
+div > label > img {
+    width: 180px;
+    height: 90px;
+}
+.carousel-item > img {
+    width: 100%;
+    height: 40vh;
+}
+main {
+    margin: 5em auto;
+    width: 70vw;
+}
+h1 {
+    color: white;
+    text-align: center;
+    font-size: 3em;
+}
+h1 img {
+    width: 300px;
+    height: 1.8em;
+}
+#navbar-scroll {
+    font-size: 1.2em;
+}
+h2 {
+    font-size: 2.3em;
+}
+.sticky-top{
+    top: 5em;
+}
+#accordion-faq {
+    height: 340px;
+}
+footer {
+    margin: 1.6em auto;
+}
+#subscriptionForm {
+    // margin-left: 100px;
+    height: 40px !important;
+    // text-align: center;
+    // width: 100%;
+}
+#subscriptionForm > button {
+    width: 18em;
+    // width: 100%;
+}
+#subscriptionMessage {
+    font-weight: bold;
+    font-size: 1.5em;
+    color: yellow;
+}
+#form-li {
+    margin-left: 100px;
+    text-align: center;
+}
+#acc_info {
+    margin-left: 18vw;
+    text-align: left;
+    font-size: 1.5em;
+}
+@media screen and (min-width: 720px) and (max-width:1080px) {
+    #accordion-faq {
+        height: 400px;
+    }
+}
+@media screen and (min-width: 360px) and (max-width:720px) { /* Стиль для отображения в браузере */
+    .navbar {
+        font-size: 0.8em;
+        background-color: #010201;
+        flex-wrap: wrap;
+    }
+    .navbar-collapse {
+        flex-wrap: wrap;
+    }
+    nav.navbar > div > a.navbar-brand > img {
+        height: 1.5em;
+        width: 4.5em;
+    }
+    ul.navbar-nav {
+        flex-wrap: wrap;
+    }
+    #passwordHelpBlock {
+        font-size: 0.5em;
+    }
+    main {
+        margin: 3.6em auto;
+        width: 90vw;
+    }
+    h1 {
+        color: white;
+        text-align: center;
+        font-size: 2.5em;
+    }
+    h1 img {
+        width: 6em;
+        height: 2em;
+    }
+    #navbar-scroll {
+        font-size: 0.9em;
+    }
+    button.btn-warning {
+        margin-top: 1em;
+    }
+    h2 {
+        font-size: 1.8em;
+    }
+    .sticky-top{
+        top: 4em;
+    }
+    .carousel-item > img {
+        width: 100%;
+        height: 30vh;
+    }
+    .carousel-caption {
+        font-size: 0.4em;
+        flex-wrap: wrap;
+    }
+    #accordion-faq {
+        height: 540px;
+        overflow: hidden;
+    }
+}

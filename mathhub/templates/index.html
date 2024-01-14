@@ -1,0 +1,753 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
+{% block link %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+            $('[data-bs-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js'></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"/>
+{% endblock %}
+
+{% block title %}MATHhub{% endblock %}
+
+{% block content %}
+    {% include 'basenavbar.html' %}
+    <!-- Модальные окна с формами авторизации -->
+    <div class="modal fade" id="modal-sign-in" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-theme="dark" tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel1">Войти в аккаунт или
+                        <a href="" data-bs-toggle="modal" data-bs-target="#modal-register">
+                            зарегистрироваться
+                        </a>
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.username }}
+                        {{ form.password }}
+<!--                        <input class="form-control" type="text" placeholder="Логин или адрес электронной почты" aria-label="Логин или адрес электронной почты">-->
+<!--                        <input class="form-control" type="password" placeholder="Пароль" aria-label="Пароль">-->
+                        <div class="modal-footer justify-content-around">
+                            <button type="submit" class="btn btn-primary">Войти</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-register" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-theme="dark" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Зарегистрироваться или
+                        <a href="/" data-bs-toggle="modal" data-bs-target="#modal-sign-in">
+                            войти
+                        </a>
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{user_form.login}}
+                        {{user_form.password}}
+                        {{user_form.password2}}
+<!--                        <input class="form-control" type="text" placeholder="Логин" aria-label="Логин">-->
+<!--                        <input class="form-control" type="password" placeholder="Пароль" aria-label="Пароль">-->
+<!--                        <input class="form-control" type="password" placeholder="Повторите пароль" aria-label="Повторите пароль">-->
+                        <div id="passwordHelpBlock2" class="form-text">
+                            Ваш пароль должен состоять из 8-20 символов, содержать буквы, цифры и специальные символы, но не должен содержать пробелов или эмодзи.
+                        </div>
+                        {{user_form.email}}
+<!--                        <input class="form-control" type="email" placeholder="Адрес электронной почты" aria-label="Адрес электронной почты">-->
+                        <br>
+                        {{user_form.is_math}}
+<!--                        <input class="form-check-input" type="checkbox" value="" aria-label="Зато не диффуры?" id="check2">-->
+
+                        <label class="form-check-label" for="check2">Ты математик?</label>
+                        <br>
+                        <br>
+                        <label for="inputGroupSelect02">Предпочитаемое место жительства</label>
+                        <br>
+                        {{user_form.live_place}}
+<!--                        <select class="form-select" id="inputGroupSelect02">-->
+<!--                            <option selected>Отсутствует</option>-->
+<!--                            <option value="1">Кампус</option>-->
+<!--                            <option value="2">Город</option>-->
+<!--                            <option value="3">Подвал</option>-->
+<!--                            <option value="4">Под мостом</option>-->
+<!--                        </select>-->
+                        <br>
+                        <p>Проверка на робота. Какие интегралы сходится?</p>
+                        <div class="column">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="inlineOptions" id="choose-int1" value="1">
+                                <label class="form-check-label" for="choose-int1"><img src="{% static 'images/integral1.jpg' %}"></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="inlineOptions" id="choose-int2" value="2">
+                                <label class="form-check-label" for="choose-int2"><img src="{% static 'images/integral2.jpg' %}"></label>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="column">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="inlineOptions" id="choose-int3" value="3">
+                                <label class="form-check-label" for="choose-int3"><img src="{% static 'images/integral3.jpg' %}"></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="inlineOptions" id="choose-int4" value="4">
+                                <label class="form-check-label" for="choose-int4"><img src="{% static 'images/integral4.jpg' %}"></label>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-around">
+                            <br><br><br>
+                            <a href="" data-bs-toggle="modal" data-bs-target="#modal-agree" class="btn btn-info">Текст соглашения</a>
+                            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-agree" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-theme="dark" tabindex="-1" aria-labelledby="staticBackdropLabel3" aria-hidden="false">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel3">
+                        Пользовательское соглашение
+                    </h1>
+<!--                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>-->
+                </div>
+                <div class="modal-body">
+                    ПРИМЕР ПОЛЬЗОВАТЕЛЬСКОГО СОГЛАШЕНИЯ<br>
+                    <h3>1. ОБЩИЕ ПОЛОЖЕНИЯ</h3><br>
+1.1. Настоящее Пользовательское соглашение (далее – Соглашение) относится к сайту «НАЗВАНИЕ
+САЙТА», расположенному по адресу АДРЕС САЙТА.<br>
+1.2. Сайт «НАЗВАНИЕ САЙТА» (далее – Сайт) является собственностью юридического лица
+ОРГАНИЗАЦИЯ (ОГРН: НОМЕР, ИНН: НОМЕР, адрес регистрации: ЮР.АДРЕС)<br>
+1.3. Настоящее Соглашение регулирует отношения между Администрацией сайта «НАЗВАНИЕ САЙТА»
+(далее – Администрация сайта) и Пользователем данного Сайта.<br>
+1.4. Администрация сайта оставляет за собой право в любое время изменять, добавлять или удалять
+пункты настоящего Соглашения без уведомления Пользователя.<br>
+1.5. Использование Сайта Пользователем означает принятие Соглашения и изменений, внесенных в
+настоящее Соглашение.<br>
+1.6. Пользователь несет персональную ответственность за проверку настоящего Соглашения на
+наличие изменений в нем.<br><br>
+                    <h3>2. ОПРЕДЕЛЕНИЯ ТЕРМИНОВ</h3><br>
+2.1. Перечисленные ниже термины имеют для целей настоящего Соглашения следующее значение:<br>
+2.1.1 «НАЗВАНИЕ САЙТА» – Интернет-ресурс, расположенный на доменном имени АДРЕС САЙТА,<br>
+осуществляющий свою деятельность посредством Интернет-ресурса и сопутствующих ему сервисов
+(далее - Сайт).<br>
+2.1.2. «НАЗВАНИЕ САЙТА» – сайт, содержащий информацию о Товарах и/или Услугах и/или Иных
+ценностях для пользователя, Продавце и/или Исполнителе услуг, позволяющий осуществить выбор,
+заказ и (или) приобретение Товара, и/или получение услуги.<br>
+2.1.3. Администрация сайта – уполномоченные сотрудники на управления Сайтом, действующие от
+имени юридического лица ОРГАНИЗАЦИЯ.<br>
+2.1.4. Пользователь сайта (далее - Пользователь) – лицо, имеющее доступ к Сайту, посредством сети
+Интернет и использующее Сайт.<br>
+2.1.5. Содержание сайта (далее – Содержание) - охраняемые результаты интеллектуальной
+деятельности, включая тексты литературных произведений, их названия, предисловия, аннотации,
+статьи, иллюстрации, обложки, музыкальные произведения с текстом или без текста, графические,
+текстовые, фотографические, производные, составные и иные произведения, пользовательские
+интерфейсы, визуальные интерфейсы, названия товарных знаков, логотипы, программы для ЭВМ, базы
+данных, а также дизайн, структура, выбор, координация, внешний вид, общий стиль и расположение
+данного Содержания, входящего в состав Сайта и другие объекты интеллектуальной собственности все
+вместе и/или по отдельности, содержащиеся на сайте АДРЕС САЙТА.<br><br>
+                    <h3>3. ПРЕДМЕТ СОГЛАШЕНИЯ</h3><br>
+3.1. Предметом настоящего Соглашения является предоставление Пользователю доступа к
+содержащимся на Сайте Товарам и/или оказываемым услугам.<br>
+3.1.1. Сайт предоставляет Пользователю следующие виды услуг (сервисов):<br>
+ предоставление Пользователю возможности размещения сообщений, комментариев,
+рецензий Пользователей, выставления оценок контенту сайта;<br>
+ ознакомление с товарами/услугами, размещенными на Сайте;<br>
+ выбор и заказ товаров/услуг для осуществления последующей покупки или оформления на
+данном Сайте.<br>
+3.1.2. Под действие настоящего Соглашения подпадают все существующие (реально
+функционирующие) на данный момент услуги (сервисы) Сайта, а также любые их последующие
+модификации и появляющиеся в дальнейшем дополнительные услуги (сервисы).<br>
+3.2. Доступ к сайту предоставляется на бесплатной основе.<br>
+3.3. Настоящее Соглашение является публичной офертой. Получая доступ к Сайту Пользователь
+считается присоединившимся к настоящему Соглашению.<br>
+3.4. Использование материалов и сервисов Сайта регулируется нормами действующего
+законодательства Российской Федерации<br><br>
+                    <h3>4. ПРАВА И ОБЯЗАННОСТИ СТОРОН</h3><br>
+4.1. Администрация сайта вправе:<br>
+4.1.1. Изменять правила пользования Сайтом, а также изменять содержание данного Сайта.
+Изменения вступают в силу с момента публикации новой редакции Соглашения на Сайте.<br>
+4.2. Пользователь вправе:<br>
+4.2.1. Пользоваться всеми имеющимися на Сайте услугами, а также приобретать любые Товары и/или
+Услуги, предлагаемые на Сайте.<br>
+4.2.2. Задавать любые вопросы, относящиеся к услугам сайта:<br>
+ по телефону: ТЕЛЕФОН<br>
+ по электронной почте: ПОЧТА<br>
+ через Форму обратной связи, расположенную по адресу: АДРЕС САЙТА<br>
+4.2.3. Пользоваться Сайтом исключительно в целях и порядке, предусмотренных Соглашением и не<br>
+запрещенных законодательством Российской Федерации.<br>
+4.2.5. Требовать от администрации скрытия любой информации о пользователе.<br>
+4.2.6. Использовать информацию сайта в коммерческих целях без специального разрешения.<br>
+4.3. Пользователь Сайта обязуется:<br>
+4.3.1. Предоставлять по запросу Администрации сайта дополнительную информацию, которая имеет
+непосредственное отношение к предоставляемым услугам данного Сайта.<br>
+4.3.2. Соблюдать имущественные и неимущественные права авторов и иных правообладателей при
+использовании Сайта.<br>
+4.3.3. Не предпринимать действий, которые могут рассматриваться как нарушающие нормальную
+работу Сайта.<br>
+4.3.4. Не распространять с использованием Сайта любую конфиденциальную и охраняемую
+законодательством Российской Федерации информацию о физических либо юридических лицах.<br>
+4.3.5. Избегать любых действий, в результате которых может быть нарушена конфиденциальность
+охраняемой законодательством Российской Федерации информации.<br>
+4.3.6. Не использовать Сайт для распространения информации рекламного характера, иначе как с
+согласия Администрации сайта.<br>
+4.3.7. Не использовать сервисы с целью:<br>
+4.3.7.1. нарушения прав несовершеннолетних лиц и (или) причинение им вреда в любой форме.<br>
+4.3.7.2. ущемления прав меньшинств.<br>
+4.3.7.3. представления себя за другого человека или представителя организации и (или) сообщества
+без достаточных на то прав, в том числе за сотрудников данного сайта.<br>
+4.3.7.4. введения в заблуждение относительно свойств и характеристик какого-либо Товара и/или
+услуги, размещенных на Сайте.<br>
+4.3.7.5. некорректного сравнения Товара и/или Услуги, а также формирования негативного отношения
+к лицам, (не) пользующимся определенными Товарами и/или услугами, или осуждения таких лиц.<br>
+4.3.7.6. загрузки контента, который является незаконным, нарушает любые права третьих лиц;
+пропагандирует насилие, жестокость, ненависть и (или) дискриминацию по расовому, национальному,
+половому, религиозному, социальному признакам; содержит недостоверные сведения и (или)
+оскорбления в адрес конкретных лиц, организаций, органов власти.<br>
+4.3.7.7. побуждения к совершению противоправных действий, а также содействия лицам, действия
+которых направлены на нарушение ограничений и запретов, действующих на территории Российской
+Федерации.<br>
+4.3.8. Обеспечить достоверность предоставляемой информации<br>
+4.3.9. Обеспечивать сохранность личных данных от доступа третьих лиц.<br>
+4.4. Пользователю запрещается:<br>
+4.4.1. Использовать любые устройства, программы, процедуры, алгоритмы и методы, автоматические
+устройства или эквивалентные ручные процессы для доступа, приобретения, копирования или
+отслеживания содержания Сайта.<br>
+4.4.2. Нарушать надлежащее функционирование Сайта.<br>
+4.4.3. Любым способом обходить навигационную структуру Сайта для получения или попытки
+получения любой информации, документов или материалов любыми средствами, которые специально
+не представлены сервисами данного Сайта.<br>
+4.4.4. Несанкционированный доступ к функциям Сайта, любым другим системам или сетям,
+относящимся к данному Сайту, а также к любым услугам, предлагаемым на Сайте.<br>
+4.4.4. Нарушать систему безопасности или аутентификации на Сайте или в любой сети, относящейся к
+Сайту.<br>
+4.4.5. Выполнять обратный поиск, отслеживать или пытаться отслеживать любую информацию о
+любом другом Пользователе Сайта.<br>
+4.4.6. Использовать Сайт и его Содержание в любых целях, запрещенных законодательством
+Российской Федерации, а также подстрекать к любой незаконной деятельности или другой
+деятельности, нарушающей права Сайта или других лиц.<br><br>
+                    <h3>5. ИСПОЛЬЗОВАНИЕ САЙТА</h3><br>
+5.1. Сайт и Содержание, входящее в состав Сайта, принадлежит и управляется Администрацией сайта.
+5.2. Содержание Сайта защищено авторским правом, законодательством о товарных знаках, а также
+другими правами, связанными с интеллектуальной собственностью, и законодательством о
+недобросовестной конкуренции.<br>
+5.3. Настоящее Соглашение распространяет свое действия на все дополнительные положения и
+условия о покупке Товара и/или оказанию услуг, предоставляемых на Сайте.<br>
+5.4. Информация, размещаемая на Сайте не должна истолковываться как изменение настоящего
+Соглашения.<br>
+5.5. Администрация сайта имеет право в любое время без уведомления Пользователя вносить
+изменения в перечень Товаров и услуг, предлагаемых на Сайте, и (или) их цен.<br>
+5.6. Документ указанный в пункте 5.7. настоящего Соглашения регулирует в соответствующей части и
+распространяют свое действие на использование Пользователем Сайта.<br>
+5.7. Политика конфиденциальности: ССЫЛКА НА ДОКУМЕНТ<br>
+5.8. Любой из документов, перечисленных в пункте 5.7 настоящего Соглашения может подлежать
+обновлению. Изменения вступают в силу с момента их опубликования на Сайте.<br><br>
+                    <h3>6. ОТВЕТСТВЕННОСТЬ</h3><br>
+6.1. Любые убытки, которые Пользователь может понести в случае умышленного или неосторожного
+нарушения любого положения настоящего Соглашения, а также вследствие несанкционированного
+доступа к коммуникациям другого Пользователя, Администрацией сайта не возмещаются.<br>
+6.2. Администрация сайта не несет ответственности за:<br>
+6.2.1. Задержки или сбои в процессе совершения операции, возникшие вследствие непреодолимой
+силы, а также любого случая неполадок в телекоммуникационных, компьютерных, электрических и
+иных смежных системах.<br>
+6.2.2. Действия систем переводов, банков, платежных систем и за задержки связанные с их работой.<br>
+6.2.3. Надлежащее функционирование Сайта, в случае, если Пользователь не имеет необходимых
+технических средств для его использования, а также не несет никаких обязательств по обеспечению
+пользователей такими средствами.<br><br>
+                    <h2>7. НАРУШЕНИЕ УСЛОВИЙ ПОЛЬЗОВАТЕЛЬСКОГО СОГЛАШЕНИЯ</h2><br>
+7.1. Администрация сайта имеет право раскрыть информацию о Пользователе, если действующее
+законодательство Российской Федерации требует или разрешает такое раскрытие.<br>
+7.2. Администрация сайта вправе без предварительного уведомления Пользователя прекратить и (или)
+заблокировать доступ к Сайту, если Пользователь нарушил настоящее Соглашение или содержащиеся
+в иных документах условия пользования Сайтом, а также в случае прекращения действия Сайта либо
+по причине технической неполадки или проблемы.<br>
+7.3. Администрация сайта не несет ответственности перед Пользователем или третьими лицами за
+прекращение доступа к Сайту в случае нарушения Пользователем любого положения настоящего
+Соглашения или иного документа, содержащего условия пользования Сайтом.<br><br>
+                    <h3>8. РАЗРЕШЕНИЕ СПОРОВ</h3><br>
+8.1. В случае возникновения любых разногласий или споров между Сторонами настоящего Соглашения
+обязательным условием до обращения в суд является предъявление претензии (письменного
+предложения о добровольном урегулировании спора).<br>
+8.2. Получатель претензии в течение 30 календарных дней со дня ее получения, письменно
+уведомляет заявителя претензии о результатах рассмотрения претензии.<br>
+8.3. При невозможности разрешить спор в добровольном порядке любая из Сторон вправе обратиться
+в суд за защитой своих прав, которые предоставлены им действующим законодательством Российской
+Федерации.<br>
+8.4. Любой иск в отношении условий использования Сайта должен быть предъявлен в течение 5 дней
+после возникновения оснований для иска, за исключением защиты авторских прав на охраняемые в
+соответствии с законодательством материалы Сайта. При нарушении условий данного пункта любой
+иск оставляется судом без рассмотрения.<br><br>
+                    <h3>9. ДОПОЛНИТЕЛЬНЫЕ УСЛОВИЯ</h3><br>
+9.1. Администрация сайта не принимает встречные предложения от Пользователя относительно
+изменений настоящего Пользовательского соглашения.<br>
+9.2. Отзывы Пользователя, размещенные на Сайте, не являются конфиденциальной информацией и
+могут быть использованы Администрацией сайта без ограничений.
+                    <a href="" data-bs-toggle="modal" data-bs-target="#modal-register" class="btn btn-info-outline">Вернуться назад</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <main data-bs-theme="dark">
+        <article>
+            <h1>Добро пожаловать на <img src="{% static 'bsimg/mathhub.jpg' %}"></h1>
+            <br>
+            <!-- Карусель -->
+            <div id="carouselCaptions" class="carousel slide">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{% static 'bsimg/intfuncs.png' %}" class="d-block" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Необычные функции</h5>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{% static 'bsimg/amgusgraph.png' %}" class="d-block" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Интересные графики</h5>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{% static 'bsimg/integrales.jpg' %}" class="d-block" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Интегральчики</h5>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselCaptions" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Предыдущий</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselCaptions" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Следующий</span>
+                </button>
+            </div>
+            <br>
+            <div id="liveAlertPlaceholder" class="alert alert-danger alert-dismissible fade show" role="alert">
+                Внимание! Весь нижеперечисленный контент создан математиками-программистами и не поддаётся пониманию обычным людям.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+            </div>
+            <div id="liveAlertPlaceholder2" class="alert alert-warning alert-dismissible fade show" role="alert">
+                Бегите, он понял!!!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+            </div>
+            <br>
+            <br>
+
+            <!-- Хлебные крошки -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Главная</a></li>
+                    <li class="breadcrumb-item"><a href="#">Другое</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Desmos</li>
+                </ol>
+            </nav>
+            <h2>Галерея</h2>
+            <hr>
+            <div class="row">
+                <div class="col-3">
+                    <div class="sticky-top bg-body-tertiary shadow-lg">
+                        <nav id="navbar-scroll" class="h-100 flex-column align-items-stretch pe-4 border-end sticky-bottom">
+                            <nav class="nav nav-pills flex-column">
+                                <a class="nav-link p-1 rounded" href="#functions">Функции</a>
+                                <a class="nav-link p-1 rounded" href="#graphs">Графики</a>
+                                <a class="nav-link p-1 rounded" href="#integrals">Интегралы</a>
+                                <a class="nav-link p-1 rounded" href="#series">Ряды</a>
+                            </nav>
+                        </nav>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <div data-bs-spy="scroll" data-bs-target="#navbar-scroll" data-bs-offset="0" data-bs-smooth-scroll="true" class="scrollspy" tabindex="0">
+                        <h3 id="functions">Функции</h3>
+                        <p>Самые интересные функции перечислены здесь</p>
+                        <!-- Карточки -->
+                        <div class="card-group">
+                            <div class="card">
+                                <img src="{% static 'bsimg/func2.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Функция биномиального распределения</h5>
+                                    <p class="card-text">Взято из теории вероятностей</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">
+                                        Если заменить факториал на Гамма-функцию,
+                                        то можно расширить на вещественные значения.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/func3.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Натуральный логарифм по основанию 2</h5>
+                                    <p class="card-text">Без комментариев</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">Появилось абсолютно случайно</small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/func4.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Какое-то дифференциальное уравнение</h5>
+                                    <p class="card-text">Взято с видоса на ютубе</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">Ох и зря я туда полез...</small>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="card-group">
+                            <div class="card">
+                                <img src="{% static 'bsimg/func5.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Второе дифференциальное уравнение</h5>
+                                    <p class="card-text">Да, это то же самое, что и предыдущее уравнение, но с другой функцией.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">
+                                        Да
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/func6.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Третье дифференциальное уравнение</h5>
+                                    <p class="card-text">Но с чуть более странной функцией.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">Нет</small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/func7.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Параметрически заданное уравнение</h5>
+                                    <p class="card-text">Да, так можно.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">И это хорошо</small>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <h3 id="graphs">Графики</h3>
+                        <p>Целых 9 великолепных графиков представлены ниже!</p>
+                        <div class="card-group">
+                            <div class="card">
+                                <img src="{% static 'bsimg/graph1.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Сфера</h5>
+                                    <p class="card-text">Да, это трёхмерный график на двумерной плоскости. До сих пор взрывает мозг.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">
+                                        Взято из fandom.desmos
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/graph2.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Точки и синусоиды</h5>
+                                    <p class="card-text">Нужно было для задачи.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">Боль</small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/graph3.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Функция распределения объёма единичной x-мерной сферы</h5>
+                                    <p class="card-text">Да, это жёстко. И да, для этого есть формула.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">Странная вещь</small>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="card-group">
+                            <div class="card">
+                                <img src="{% static 'bsimg/graph4.jpg' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Какой-то периодический график</h5>
+                                    <p class="card-text">Да.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">
+                                        Сделан по импровизации
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/graph5.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Интегральное преобразование функции 1</h5>
+                                    <p class="card-text">Прикольная вещь. Сглаживает острые углы у графиков функций.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">Одобряю</small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/graph6.jpg' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Что-то напоминает...</h5>
+                                    <p class="card-text">Осуждаю.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">Максимально осуждаю</small>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="card-group">
+                            <div class="card">
+                                <img src="{% static 'bsimg/graph7.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Фрактальная кривая 1</h5>
+                                    <p class="card-text">Выглядит прикольно.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">
+                                        Рекомендую
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/graph8.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Фрактальная кривая 2</h5>
+                                    <p class="card-text">Тоже прикольно, но более угловато.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">Рекомендую</small>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/graph9.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Фрактальная кривая 3</h5>
+                                    <p class="card-text">Один из самых красивых графиков.</p>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-body-secondary">Максимально одобряю</small>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <h3 id="integrals">Интегралы</h3>
+                        <p> Мой любимый раздел: "Интегрирование в уме".</p>
+                        <div class="card-group">
+                            <div class="card">
+                                <img src="{% static 'bsimg/int1.jpg' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">По-детски сложный интеграл</h5>
+                                    <p class="card-text">Почему? Потому что большое число в подынтегральной функции</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/int2.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Неинтегрируемое</h5>
+                                    <p class="card-text">Vietnamese flashbacks.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/int3.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Прикольный интеграл</h5>
+                                    <p class="card-text">Такое мы интегрируем.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="card-group">
+                            <div class="card">
+                                <img src="{% static 'bsimg/int4.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Интеграл в общем виде</h5>
+                                    <p class="card-text">Невозможно выразить в элементарных функциях.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/int5.jpg' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Интеграл от произведения Гамма-функций</h5>
+                                    <p class="card-text">Да, так можно.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/int6.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Забаненный интеграл</h5>
+                                    <p class="card-text">БАН!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="card-group">
+                            <div class="card">
+                                <img src="{% static 'bsimg/int7.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Двойной интеграл</h5>
+                                    <p class="card-text">Ну, пока норм.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/int8.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Производная от интеграла</h5>
+                                    <p class="card-text">Зачем? Я не знаю.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/int9.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Интегральное преобразование Вейерштрасса</h5>
+                                    <p class="card-text">Сглаживает острые углы графика почти любой функции.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <h3 id="series">Ряды</h3>
+                        <p>Ну и напоследок несколько рядов, с которыми на первый взгляд вообще не понятно, что делать и как считать их сумму.</p>
+                        <div class="card-group">
+                            <div class="card">
+                                <img src="{% static 'bsimg/series1.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Полугиперболико-тригонометрический ряд</h5>
+                                    <p class="card-text">Интересно.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/series2.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Знакочередующийся ряд обратных натуральных логарифмов</h5>
+                                    <p class="card-text">Сложно.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/series3.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Необычный тригонометрический ряд</h5>
+                                    <p class="card-text">Странно.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="card-group">
+                            <div class="card">
+                                <img src="{% static 'bsimg/series4.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Ряд синусоидальных обратных экспонент</h5>
+                                    <p class="card-text">Непонятно.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/series5.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Экспоненциально-обратный относительный ряд</h5>
+                                    <p class="card-text">Сложно.</p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <img src="{% static 'bsimg/series6.png' %}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">СУС</h5>
+                                    <p class="card-text">СУС.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <h3>Часто задаваемые вопросы</h3>
+            <br>
+            <!-- Аккордеон -->
+            <div class="accordion" id="accordion-faq">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            Почему именно MATHhub?
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            MATH - это математика, т. е. тема сайта, а hub, потому что здесь собрано всё или почти всё по теме (вдохновлено
+                            <!-- Всплывающая подсказка -->
+                            <a href="#" class="text-light" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Крупнейший веб-сервис для хостинга IT-проектов и их совместной разработки. Основан на системе контроля версий Git.">GitHub</a>,
+                            а не тем, о чём вы могли подумать).
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Почему desmos?
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            Потому что desmos - это один из лучший графических калькуляторов, который вы только можете найти в интернете (ИМХО).
+                            В нём удобно набирать многие математические выражения (за исключением матриц и кратных интегралов) и оформлять записи.
+                            Плюс desmos (в теории) <a href="#" class="text-light" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Можно реализовать любую вычислимую функцию">полон по Тьюрингу</a>.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Не слишком много математики?
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            Нет.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </main>
+    {% include 'basefooter.html' %}
+{% endblock %}
